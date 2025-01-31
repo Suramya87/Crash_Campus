@@ -1,6 +1,5 @@
-// Code Practice: Making a Scene
-// Name: Suramya Shakya
-// Date: 01/13/2025
+// Code Practice: Crash_Campus
+// Date: 01/31/2025
 
 "use strict"
 
