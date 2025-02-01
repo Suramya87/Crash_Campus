@@ -15,7 +15,7 @@ let config = {
     // width: 640,
     // height: 480,
     width: 1280,
-    height: 720,
+    height: 1024,
     scene: [ Play ]
   }
 
