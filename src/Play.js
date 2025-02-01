@@ -30,12 +30,17 @@ class Play extends Phaser.Scene {
         // this.line4.setSize(8,960)
         // this.line4.setImmovable(true);
         // this.lanes = this.add.group(this.line1, this.line2, this.line3, this.line4)
-        this.lanes = this.physics.add.group({
-            key: 'Black',
-            frameQuantity: 4, // Create 4 lanes
-            setXY: { x: 285, y: 480, stepX: 245 }, // Position lanes with a step of 245 pixels on the X-axis
-            setSize: { width: 8, height: 960 } // Set collision box size for all lanes
-        });
+        const lanePositions = [285, 530, 773, 1014]; // X positions of the lanes
+        const laneHeight = 960; // Height of the lanes
+        const laneWidth = 8; // Width of the lanes
+
+        this.lanes = this.physics.add.group();
+        for (let i = 0; i < lanePositions.length; i++) {
+            const lane = this.physics.add.sprite(lanePositions[i], 480, 'Black', 0);
+            lane.setSize(laneWidth, laneHeight);
+            lane.setImmovable(true);
+            this.lanes.add(lane);
+        }
         this.black = this.add.tileSprite(0, 0, 640 , 480, 'Black').setOrigin(0, 0).setScale(2)
         // this
         this.lines = this.add.tileSprite(0, 0, 640, 480, 'Lines').setOrigin(0, 0).setScale(2)
@@ -49,9 +54,23 @@ class Play extends Phaser.Scene {
         this.player = this.physics.add.sprite(width/2, height/2, 'character',1).setScale(2)
         this.player.body.setCollideWorldBounds(true)
         this.player.setSize(56,64)
+        // Cooldown variables
+        this.isCooldown = false; // Flag to track cooldown state
+        this.cooldownTime = 2000; // Cooldown duration in milliseconds (2 seconds)
+
         this.physics.add.overlap(this.player, this.lanes, ()=>{
-            // this.sound.play('death')
-            console.log('death')
+            if (!this.isCooldown) { // Check if cooldown is not active
+                this.sound.play('death', { volume: 0.1 }); // Play death sound
+                console.log('death'); // Print to console
+
+                // Activate cooldown
+                this.isCooldown = true;
+
+                // Set a timer to reset the cooldown
+                this.time.delayedCall(this.cooldownTime, () => {
+                    this.isCooldown = false; // Reset cooldown flag
+                });
+            }
         })
         }
         PLAYER()
@@ -96,24 +115,24 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        // this.strips.tilePositionY -= 2
-        // this.lines.tilePositionY -= 4
+        this.strips.tilePositionY -= 2
+        this.lines.tilePositionY -= 4
         let playerVector = new Phaser.Math.Vector2(0, 0);
         playerVector.y = 0.1;
     
-        console.log(this.lanes.getChildren());
+        // console.log(this.lanes.getChildren());
         // Check for input and update direction
         if (cursors.left.isDown) {
             playerVector.x = -1;
             // playerDirection = 'left';
             this.player.play('idle-left')
-            console.log("left")
+            // console.log("left")
 
         } else if (cursors.right.isDown) {
             playerVector.x = 1;
             // playerDirection = 'right';
             this.player.play('idle-right')
-            console.log("right")
+            // console.log("right")
         }
 
         if (cursors.up.isDown) {
