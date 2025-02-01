@@ -15,7 +15,7 @@ let config = {
     // width: 640,
     // height: 480,
     width: 1280,
-    height: 1024,
+    height: 960,
     render:{
       pixelArt: true
     },
