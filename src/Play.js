@@ -116,7 +116,7 @@ class Play extends Phaser.Scene {
 
     update() {
         this.strips.tilePositionY -= 2
-        this.lines.tilePositionY -= 4
+        this.lines.tilePositionY -= 2
         let playerVector = new Phaser.Math.Vector2(0, 0);
         playerVector.y = 0.1;
     
@@ -137,13 +137,13 @@ class Play extends Phaser.Scene {
 
         if (cursors.up.isDown) {
             this.strips.tilePositionY -= 4
-            this.lines.tilePositionY -= 8
+            this.lines.tilePositionY -= 4
             playerVector.y = -0.5;
             this.player.play('speed')
             // playerDirection = 'up';
         } else if (cursors.down.isDown) {
-            this.strips.tilePositionY -= 0.5
-            this.lines.tilePositionY -= 1
+            this.strips.tilePositionY += 1
+            this.lines.tilePositionY += 1
             playerVector.y = 0.5;
             this.player.play('speed')
             // playerDirection = 'down';
@@ -156,15 +156,7 @@ class Play extends Phaser.Scene {
 
     
         this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x,this.PLAYER_VELOCITY * playerVector.y);
-        // let playerMovement = playerVector.length() ? 'walk' : 'idle';
-    
-        // Only update the last direction if the player is moving
-        // if (playerVector.length()) {
-            // this.lastDirection = playerDirection;
-        // }
-    
-        // this.player.play(playerMovement + '-' + this.lastDirection, true);
-        // this.player.play('normal')
+
     }
 }
 
