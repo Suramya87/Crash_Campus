@@ -16,13 +16,23 @@ let config = {
     // height: 480,
     width: 1280,
     height: 1024,
+    render:{
+      pixelArt: true
+    },
+    physics: {
+        default: 'arcade',
+        arcade:{
+            debug: true,
+        },
+    },
     scene: [ Play ]
   }
 
 let game = new Phaser.Game(config)
-
+let cursors
 let borderUISize = game.config.height / 15
 let borderPadding = borderUISize / 3
+let { height, width } = game.config
 
 // reserve keyboard bindings
 let keyFIRE, keyRESET, keyLEFT, keyRIGHT
