@@ -4,10 +4,12 @@ class Play extends Phaser.Scene {
     }
     init() {
         this.PLAYER_VELOCITY = 350
-        this.followerSpeed = 500
+        this.followerSpeed = 100
+        this.CHASE_VELOCITY = 500
         this.player_isTouching = false
         this.player_isTurning = false
         this.LANES = false
+        this.roadPositions = [168, 440, 653, 884] 
         this.lanePositions = [285, 530, 773, 1014];
         this.laneHeight = 960; 
         this.laneWidth = 8; 
@@ -81,7 +83,7 @@ class Play extends Phaser.Scene {
             this.cops = this.physics.add.sprite(width/2, height/2, 'COPS',0).setScale(3)
             this.cops.body.setCollideWorldBounds(true)
             this.cops.setSize(56,64)
-            this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
+            this.TARGET_X = Phaser.Math.RND.pick(this.roadPositions)
             this.TARGET_Y = Phaser.Math.Between(0,height)
             this.physics.add.collider(this.cops, this.player, (cops,player)=>{
             if (this.LANES) {
@@ -236,7 +238,8 @@ class Play extends Phaser.Scene {
 
             if (this.LANES) {
                 // this.cops.play('not-chillin')
-                this.reposition = false;
+                // this.scaning = false
+                // this.reposition = false;
                 console.log('get fucked')
                 const direction = new Phaser.Math.Vector2(
                     this.player.x - this.cops.x,
@@ -247,18 +250,15 @@ class Play extends Phaser.Scene {
                 direction.normalize();
                 // Move the follower
                 this.cops.setVelocity(
-                    direction.x * this.followerSpeed,
-                    direction.y * this.followerSpeed
+                    direction.x * this.CHASE_VELOCITY,
+                    direction.y * this.CHASE_VELOCITY
                 );
             } else { 
-                // this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
-                // this.TARGET_Y = Phaser.Math.Between(0,height)
-                // this.LANES = false
-                // this.reposition = false;
                 this.cops.play('chillin')
                 const direction = new Phaser.Math.Vector2(
-                    this.TARGET_X + 125 - this.cops.x,
+                    this.TARGET_X - this.cops.x,
                     this.TARGET_Y - this.cops.y
+                    // this.player.y - this.cops.y
                 );
         
                 // Normalize the direction vector
@@ -266,33 +266,28 @@ class Play extends Phaser.Scene {
                 // Move the follower
                 if (!this.reposition){
                 this.cops.setVelocity(
-                    direction.x * this.followerSpeed,
-                    direction.y * this.followerSpeed
-                );
-                this.time.delayedCall(2000, () => {
+                    (direction.x * this.followerSpeed),
+                    (direction.y * this.followerSpeed) / 2
+                );        
+                this.time.delayedCall(5000, () => {
+                // if (this.TARGET_X - this.cops.x == this.cops.x) {
                     this.reposition = true
-
+                    console.log('tweakiing out')
+                    // this.scaning = true
+                // }
             });
                 // this.cops.setVelocity(0, 0.1)
         }
             if (this.reposition){
+                this.reposition = false;
                 this.cops.setVelocity(0, 100)
-                this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
+                this.TARGET_X = Phaser.Math.RND.pick(this.roadPositions)
                 this.TARGET_Y = Phaser.Math.Between(0,height)
+                // console.log(this.TARGET_X, this.TARGET_Y)
+                console.log(this.cops.x)
+                // this.reposition = false;
             }
             }
-            // const direction = new Phaser.Math.Vector2(
-                // this.player.x - this.cops.x,
-                // this.player.y - this.cops.y
-            // );
-
-            // Normalize the direction vector
-            // direction.normalize();
-            // Move the follower
-            // this.cops.setVelocity(
-                // direction.x * this.followerSpeed,
-                // direction.y * this.followerSpeed
-            // );
 
             playerVector.normalize();
             this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x,this.PLAYER_VELOCITY * playerVector.y);
