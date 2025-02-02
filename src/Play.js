@@ -22,7 +22,7 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('COPS', './assets/POLICE.png',{
             frameWidth: 100
         })
-        this.load.spritesheet('character','./assets/testcar.png',{
+        this.load.spritesheet('character','./assets/testcar2.png',{
             frameWidth: 128
         })
     }
@@ -182,20 +182,20 @@ class Play extends Phaser.Scene {
             if (!this.player_isTouching) {
                 this.LANES = false
             } 
-            if (cursors.left.isDown) {
-                playerVector.x = -1;
-                // playerDirection = 'left';
-                this.player.play('idle-left')
-                this.player_isTurning = true
-                // console.log("left")
+            // if (cursors.left.isDown) {
+            //     playerVector.x = -1;
+            //     // playerDirection = 'left';
+            //     this.player.play('idle-left')
+            //     this.player_isTurning = true
+            //     // console.log("left")
 
-            } else if (cursors.right.isDown) {
-                playerVector.x = 1;
-                // playerDirection = 'right';
-                this.player.play('idle-right')
-                this.player_isTurning = true
-                // console.log("right")
-            }
+            // } else if (cursors.right.isDown) {
+            //     playerVector.x = 1;
+            //     // playerDirection = 'right';
+            //     this.player.play('idle-right')
+            //     this.player_isTurning = true
+            //     // console.log("right")
+            // }
 
             if (cursors.up.isDown) {
                 this.strips.tilePositionY -= 4
@@ -210,9 +210,25 @@ class Play extends Phaser.Scene {
                 this.player.play('speed')
                 // playerDirection = 'down';
             } 
+            if (cursors.left.isDown) {
+                playerVector.x = -1;
+                // playerDirection = 'left';
+                this.player.play('idle-left')
+                this.player_isTurning = true
+                // console.log("left")
+
+            } else if (cursors.right.isDown) {
+                playerVector.x = 1;
+                // playerDirection = 'right';
+                this.player.play('idle-right')
+                this.player_isTurning = true
+                // console.log("right")
+            }
+            if (!cursors.right.isDown && !cursors.left.isDown) {
+                this.player_isTurning = false
+            }
             if (!cursors.up.isDown && !cursors.down.isDown && !cursors.right.isDown && !cursors.left.isDown) {
                 this.player.play('normal')
-                this.player_isTurning = false
             }
             if (this.player_isTouching && !this.player_isTurning) {
                 this.LANES = true
