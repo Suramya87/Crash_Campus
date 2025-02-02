@@ -149,6 +149,9 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        if (this.player.destroyed) {
+            this.scene.start('GG');
+        }
         if (!this.physics.world.overlap(this.player, this.lanes)) {
             this.player_isTouching = false;
             // this.cops.play('chillin')

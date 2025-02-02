@@ -25,7 +25,7 @@ let config = {
             debug: true,
         },
     },
-    scene: [ Play ]
+    scenes: [ Play, GG ]
   }
 
 let game = new Phaser.Game(config)

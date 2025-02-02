@@ -16,3 +16,4 @@ class COPS extends Phaser.GameObjects.Sprite {
         this.x = game.config.width
     }
 }
+
