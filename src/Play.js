@@ -75,15 +75,12 @@ class Play extends Phaser.Scene {
             this.cops.setSize(56,64)
             this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
             this.TARGET_Y = Phaser.Math.Between(0,height)
-
-            if (this.LANES) {
-                // this.cops.play('not-chillin')
-                this.physics.add.overlap(this.cops, this.player, (cops,player)=>{
-                    console.log('GG')
-                    player.destory()
-
-                });
-            }
+            this.physics.add.collider(this.cops, this.player, (cops,player)=>{
+                if (this.LANES) {
+                console.log('GG')
+                player.destory()
+                }
+            });
         }
         DA_POLICE()
         this.anims.create({
