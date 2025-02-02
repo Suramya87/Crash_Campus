@@ -86,7 +86,8 @@ class Play extends Phaser.Scene {
             this.physics.add.collider(this.cops, this.player, (cops,player)=>{
             if (this.LANES) {
                 console.log('GG')
-                player.destroy()
+                // player.destroy()
+                this.scene.start('gameOver')
                 }
             });
         }
@@ -149,140 +150,140 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        if (this.player.destroyed) {
-            this.scene.start('gameOver')
-        }
-        if (!this.physics.world.overlap(this.player, this.lanes)) {
-            this.player_isTouching = false;
-            // this.cops.play('chillin')
-        }
-        this.strips.tilePositionY -= 2
-        this.lines.tilePositionY -= 2
-        let playerVector = new Phaser.Math.Vector2(0, 0);
-        // let copsVector = new Phaser.Math.Vector2(0, 0);
-        playerVector.y = 0.1;
+        if (!this.player.destroyed) {
 
-        // copsVector = new Phaser.Math.Vector2(playerVector.x - copsVector.x, playerVector.y - copsVector.y)
-        // const direction = new Phaser.Math.Vector2(
-            // this.player.x - this.cops.x,
-            // this.player.y - this.cops.y
-        // );
+        
+            if (!this.physics.world.overlap(this.player, this.lanes)) {
+                this.player_isTouching = false;
+                // this.cops.play('chillin')
+            }
+            this.strips.tilePositionY -= 2
+            this.lines.tilePositionY -= 2
+            let playerVector = new Phaser.Math.Vector2(0, 0);
+            // let copsVector = new Phaser.Math.Vector2(0, 0);
+            playerVector.y = 0.1;
 
-        // Normalize the direction vector
-        // direction.normalize();
+            // copsVector = new Phaser.Math.Vector2(playerVector.x - copsVector.x, playerVector.y - copsVector.y)
+            // const direction = new Phaser.Math.Vector2(
+                // this.player.x - this.cops.x,
+                // this.player.y - this.cops.y
+            // );
 
-        // Move the follower
-        // this.follower.setVelocity(
-            // direction.x * this.followerSpeed,
-            // direction.y * this.followerSpeed
-        // );
-
-        // Check for input and update direction
-        if (!this.player_isTouching) {
-            this.LANES = false
-        } 
-        if (cursors.left.isDown) {
-            playerVector.x = -1;
-            // playerDirection = 'left';
-            this.player.play('idle-left')
-            this.player_isTurning = true
-            // console.log("left")
-
-        } else if (cursors.right.isDown) {
-            playerVector.x = 1;
-            // playerDirection = 'right';
-            this.player.play('idle-right')
-            this.player_isTurning = true
-            // console.log("right")
-        }
-
-        if (cursors.up.isDown) {
-            this.strips.tilePositionY -= 4
-            this.lines.tilePositionY -= 4
-            playerVector.y = -1;
-            this.player.play('speed')
-            // playerDirection = 'up';
-        } else if (cursors.down.isDown) {
-            this.strips.tilePositionY += 1
-            this.lines.tilePositionY += 1
-            playerVector.y = 1;
-            this.player.play('speed')
-            // playerDirection = 'down';
-        } 
-        if (!cursors.up.isDown && !cursors.down.isDown && !cursors.right.isDown && !cursors.left.isDown) {
-            this.player.play('normal')
-            this.player_isTurning = false
-        }
-        if (this.player_isTouching && !this.player_isTurning) {
-            this.LANES = true
-        } //else { this.LANES = false; }
-
-        if (this.LANES) {
-            // this.cops.play('not-chillin')
-            this.reposition = false;
-            console.log('get fucked')
-            const direction = new Phaser.Math.Vector2(
-                this.player.x - this.cops.x,
-                this.player.y - this.cops.y
-            );
-    
             // Normalize the direction vector
-            direction.normalize();
+            // direction.normalize();
+
             // Move the follower
-            this.cops.setVelocity(
-                direction.x * this.followerSpeed,
-                direction.y * this.followerSpeed
-            );
-        } else { 
-            // this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
-            // this.TARGET_Y = Phaser.Math.Between(0,height)
-            // this.LANES = false
-            // this.reposition = false;
-            this.cops.play('chillin')
-            const direction = new Phaser.Math.Vector2(
-                this.TARGET_X + 125 - this.cops.x,
-                this.TARGET_Y - this.cops.y
-            );
-    
+            // this.follower.setVelocity(
+                // direction.x * this.followerSpeed,
+                // direction.y * this.followerSpeed
+            // );
+
+            // Check for input and update direction
+            if (!this.player_isTouching) {
+                this.LANES = false
+            } 
+            if (cursors.left.isDown) {
+                playerVector.x = -1;
+                // playerDirection = 'left';
+                this.player.play('idle-left')
+                this.player_isTurning = true
+                // console.log("left")
+
+            } else if (cursors.right.isDown) {
+                playerVector.x = 1;
+                // playerDirection = 'right';
+                this.player.play('idle-right')
+                this.player_isTurning = true
+                // console.log("right")
+            }
+
+            if (cursors.up.isDown) {
+                this.strips.tilePositionY -= 4
+                this.lines.tilePositionY -= 4
+                playerVector.y = -1;
+                this.player.play('speed')
+                // playerDirection = 'up';
+            } else if (cursors.down.isDown) {
+                this.strips.tilePositionY += 1
+                this.lines.tilePositionY += 1
+                playerVector.y = 1;
+                this.player.play('speed')
+                // playerDirection = 'down';
+            } 
+            if (!cursors.up.isDown && !cursors.down.isDown && !cursors.right.isDown && !cursors.left.isDown) {
+                this.player.play('normal')
+                this.player_isTurning = false
+            }
+            if (this.player_isTouching && !this.player_isTurning) {
+                this.LANES = true
+            } //else { this.LANES = false; }
+
+            if (this.LANES) {
+                // this.cops.play('not-chillin')
+                this.reposition = false;
+                console.log('get fucked')
+                const direction = new Phaser.Math.Vector2(
+                    this.player.x - this.cops.x,
+                    this.player.y - this.cops.y
+                );
+        
+                // Normalize the direction vector
+                direction.normalize();
+                // Move the follower
+                this.cops.setVelocity(
+                    direction.x * this.followerSpeed,
+                    direction.y * this.followerSpeed
+                );
+            } else { 
+                // this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
+                // this.TARGET_Y = Phaser.Math.Between(0,height)
+                // this.LANES = false
+                // this.reposition = false;
+                this.cops.play('chillin')
+                const direction = new Phaser.Math.Vector2(
+                    this.TARGET_X + 125 - this.cops.x,
+                    this.TARGET_Y - this.cops.y
+                );
+        
+                // Normalize the direction vector
+                direction.normalize();
+                // Move the follower
+                if (!this.reposition){
+                this.cops.setVelocity(
+                    direction.x * this.followerSpeed,
+                    direction.y * this.followerSpeed
+                );
+                this.time.delayedCall(2000, () => {
+                    this.reposition = true
+
+            });
+                // this.cops.setVelocity(0, 0.1)
+        }
+            if (this.reposition){
+                this.cops.setVelocity(0, 100)
+                this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
+                this.TARGET_Y = Phaser.Math.Between(0,height)
+            }
+            }
+            // const direction = new Phaser.Math.Vector2(
+                // this.player.x - this.cops.x,
+                // this.player.y - this.cops.y
+            // );
+
             // Normalize the direction vector
-            direction.normalize();
+            // direction.normalize();
             // Move the follower
-            if (!this.reposition){
-            this.cops.setVelocity(
-                direction.x * this.followerSpeed,
-                direction.y * this.followerSpeed
-            );
-            this.time.delayedCall(2000, () => {
-                this.reposition = true
+            // this.cops.setVelocity(
+                // direction.x * this.followerSpeed,
+                // direction.y * this.followerSpeed
+            // );
 
-        });
-            // this.cops.setVelocity(0, 0.1)
-    }
-        if (this.reposition){
-            this.cops.setVelocity(0, 100)
-            this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
-            this.TARGET_Y = Phaser.Math.Between(0,height)
+            playerVector.normalize();
+            this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x,this.PLAYER_VELOCITY * playerVector.y);
+
+        
+            // this.cops.setVelocity(this.followerSpeed * copsVector.x,this.followerSpeed * copsVector.y);
         }
-        }
-        // const direction = new Phaser.Math.Vector2(
-            // this.player.x - this.cops.x,
-            // this.player.y - this.cops.y
-        // );
-
-        // Normalize the direction vector
-        // direction.normalize();
-        // Move the follower
-        // this.cops.setVelocity(
-            // direction.x * this.followerSpeed,
-            // direction.y * this.followerSpeed
-        // );
-
-        playerVector.normalize();
-        this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x,this.PLAYER_VELOCITY * playerVector.y);
-
-    
-        // this.cops.setVelocity(this.followerSpeed * copsVector.x,this.followerSpeed * copsVector.y);
-
     }
-}
+}  
 
