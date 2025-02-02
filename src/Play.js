@@ -4,7 +4,7 @@ class Play extends Phaser.Scene {
     }
     init() {
         this.PLAYER_VELOCITY = 350
-        this.followerSpeed = 250
+        this.followerSpeed = 500
         this.player_isTouching = false
         this.player_isTurning = false
         this.LANES = false
@@ -216,6 +216,7 @@ class Play extends Phaser.Scene {
 
         if (this.LANES) {
             // this.cops.play('not-chillin')
+            this.reposition = false;
             console.log('get fucked')
             const direction = new Phaser.Math.Vector2(
                 this.player.x - this.cops.x,
@@ -233,20 +234,32 @@ class Play extends Phaser.Scene {
             // this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
             // this.TARGET_Y = Phaser.Math.Between(0,height)
             // this.LANES = false
+            // this.reposition = false;
             this.cops.play('chillin')
             const direction = new Phaser.Math.Vector2(
-                this.TARGET_X + 100 - this.cops.x,
+                this.TARGET_X + 125 - this.cops.x,
                 this.TARGET_Y - this.cops.y
             );
     
             // Normalize the direction vector
             direction.normalize();
             // Move the follower
+            if (!this.reposition){
             this.cops.setVelocity(
                 direction.x * this.followerSpeed,
                 direction.y * this.followerSpeed
             );
-        
+            this.time.delayedCall(2000, () => {
+                this.reposition = true
+
+        });
+            // this.cops.setVelocity(0, 0.1)
+    }
+        if (this.reposition){
+            this.cops.setVelocity(0, 100)
+            this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
+            this.TARGET_Y = Phaser.Math.Between(0,height)
+        }
         }
         // const direction = new Phaser.Math.Vector2(
             // this.player.x - this.cops.x,
@@ -261,7 +274,7 @@ class Play extends Phaser.Scene {
             // direction.y * this.followerSpeed
         // );
 
-        // playerVector.normalize();
+        playerVector.normalize();
         this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x,this.PLAYER_VELOCITY * playerVector.y);
 
     
