@@ -100,7 +100,8 @@ class COPS extends Phaser.Scene {
             if (this.reposition && !this.CHASE) {
                 this.CHASE = false;
                 this.reposition = false;
-                this.cops.setVelocity(0, 100);
+                this.cops.setVelocity(0, 1000);
+                // this.cops.destroy();
                 // this.TARGET_X = Phaser.Math.RND.pick(this.roadPositions);
                 // this.TARGET_Y = Phaser.Math.Between(0, this.height);
 
@@ -109,6 +110,12 @@ class COPS extends Phaser.Scene {
                     // console.log('that')
                     // this.CHASE = false;
                 // });
+            }
+            
+            if (this.cops.y > this.height + 100) {
+                console.log('should be dead')
+                // this.cops.destroy();
+                this.scene.stop('DA_POLICE')
             }
         }
     }
