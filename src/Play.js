@@ -4,7 +4,7 @@ class Play extends Phaser.Scene {
     }
     init() {
         this.PLAYER_VELOCITY = 350
-        this.followerSpeed = 100
+        this.followerSpeed = 250
         this.player_isTouching = false
         this.player_isTurning = false
         this.LANES = false
@@ -54,10 +54,9 @@ class Play extends Phaser.Scene {
         this.player_isTouching = false
         this.physics.add.overlap(this.player, this.lanes, ()=>{
             this.player_isTouching = true
-            if (this.LANES){
-                this.cops.play('not-chillin')
-            }
+
             if (!this.isCooldown && this.LANES) { // Check if cooldown is not active
+                this.cops.play('not-chillin')
                 this.sound.play('death', { volume: 0.1 }); // Play death sound
                 console.log('death'); // Print to console
                 // this.player_isTouching = true
@@ -152,6 +151,7 @@ class Play extends Phaser.Scene {
     update() {
         if (!this.physics.world.overlap(this.player, this.lanes)) {
             this.player_isTouching = false;
+            // this.cops.play('chillin')
         }
         this.strips.tilePositionY -= 2
         this.lines.tilePositionY -= 2
