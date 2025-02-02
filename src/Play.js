@@ -53,17 +53,26 @@ class Play extends Phaser.Scene {
         this.cooldownTime = 2000; // Cooldown duration in milliseconds (2 seconds)
         this.player_isTouching = false
         this.physics.add.overlap(this.player, this.lanes, ()=>{
-            if (!this.isCooldown) { // Check if cooldown is not active
+            this.player_isTouching = true
+            if (this.LANES){
+                this.cops.play('not-chillin')
+            }
+            if (!this.isCooldown && this.LANES) { // Check if cooldown is not active
                 this.sound.play('death', { volume: 0.1 }); // Play death sound
-                // console.log('death'); // Print to console
-                this.player_isTouching = true
+                console.log('death'); // Print to console
+                // this.player_isTouching = true
                 // Activate cooldown
                 this.isCooldown = true;
-
+                // if (this.LANES){
+                //     this.cops.play('not-chillin')
+                //     // this.sound.play('death', { volume: 0.01 });
+                // }
+                // this.isCooldown = true;
                 // Set a timer to reset the cooldown
                 this.time.delayedCall(this.cooldownTime, () => {
+                //     this.player_isTouching = false
                     this.isCooldown = false; // Reset cooldown flag
-                    this.player_isTouching = false
+                //     // this.player_isTouching = false
                 });
             } 
         })
@@ -76,9 +85,9 @@ class Play extends Phaser.Scene {
             this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
             this.TARGET_Y = Phaser.Math.Between(0,height)
             this.physics.add.collider(this.cops, this.player, (cops,player)=>{
-                if (this.LANES) {
+            if (this.LANES) {
                 console.log('GG')
-                player.destory()
+                player.destroy()
                 }
             });
         }
@@ -141,6 +150,9 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        if (!this.physics.world.overlap(this.player, this.lanes)) {
+            this.player_isTouching = false;
+        }
         this.strips.tilePositionY -= 2
         this.lines.tilePositionY -= 2
         let playerVector = new Phaser.Math.Vector2(0, 0);
@@ -163,6 +175,9 @@ class Play extends Phaser.Scene {
         // );
 
         // Check for input and update direction
+        if (!this.player_isTouching) {
+            this.LANES = false
+        } 
         if (cursors.left.isDown) {
             playerVector.x = -1;
             // playerDirection = 'left';
@@ -197,10 +212,10 @@ class Play extends Phaser.Scene {
         }
         if (this.player_isTouching && !this.player_isTurning) {
             this.LANES = true
-        } else { this.LANES = false; }
+        } //else { this.LANES = false; }
 
         if (this.LANES) {
-            this.cops.play('not-chillin')
+            // this.cops.play('not-chillin')
             console.log('get fucked')
             const direction = new Phaser.Math.Vector2(
                 this.player.x - this.cops.x,
@@ -217,6 +232,7 @@ class Play extends Phaser.Scene {
         } else { 
             // this.TARGET_X = Phaser.Math.RND.pick(this.lanePositions)
             // this.TARGET_Y = Phaser.Math.Between(0,height)
+            // this.LANES = false
             this.cops.play('chillin')
             const direction = new Phaser.Math.Vector2(
                 this.TARGET_X + 100 - this.cops.x,
