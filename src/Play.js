@@ -150,7 +150,7 @@ class Play extends Phaser.Scene {
 
     update() {
         if (this.player.destroyed) {
-            this.scene.start('GG');
+            this.scene.start('gameOver')
         }
         if (!this.physics.world.overlap(this.player, this.lanes)) {
             this.player_isTouching = false;
