@@ -22,6 +22,12 @@ class Play extends Phaser.Scene {
         this.load.image('Strips', './assets/rumbleStrips.png');
         this.load.image('Black', './assets/blacktopBG.png');
         this.load.audio('death', './assets/STAY_IN_THE_LANE.mp3');
+        this.load.spritesheet('cars', './assets/cars.png', {
+            frameWidth: 100
+        });
+        this.load.spritesheet('Biker', './assets/Biker.png', {
+            frameWidth: 100
+        });
         this.load.spritesheet('COPS', './assets/POLICE2.png', {
             frameWidth: 100
         });
@@ -67,6 +73,11 @@ class Play extends Phaser.Scene {
         };
         
         PLAYER();
+        this.scene.launch('TRAFFIC', {
+            player: this.player,
+            roadPositions: this.roadPositions,
+            height: this.cameras.main.height
+        });
 
         // Start the PoliceScene and pass necessary data
         this.scene.launch('DA_POLICE', {
