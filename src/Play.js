@@ -15,6 +15,10 @@ class Play extends Phaser.Scene {
         this.lanePositions = [285, 530, 773, 1014];
         this.laneHeight = 960;
         this.laneWidth = 8;
+        this.timeSurvived = 0;
+        this.highScore = localStorage.getItem('highScore') || 0;
+        this.isGameOver = false;
+            
     }
 
     preload() {
@@ -51,8 +55,10 @@ class Play extends Phaser.Scene {
 
         const PLAYER = () => {
             this.player = this.physics.add.sprite(width / 2, height / 2, 'character', 1).setScale(2);
-            this.player.body.setCollideWorldBounds(true);
+            this.player.body.setCollideWorldBounds(false);
             this.player.setSize(56, 64);
+            this.player.body.setBounce(2)
+            // this.player.body.setDamping(true).setDrag(0.5)
             this.isCooldown = false;
             this.cooldownTime = 2000;
             this.player_isTouching = false;
@@ -73,6 +79,31 @@ class Play extends Phaser.Scene {
         };
         
         PLAYER();
+        // Start updating time survived every second
+        this.timeEvent = this.time.addEvent({
+            delay: 1000, // Every second
+            callback: () => {
+                this.timeSurvived++;
+                this.timeText.setText(`Time: ${this.timeSurvived}s`);
+            },
+            loop: true
+        });
+
+        // Display time survived
+        this.timeText = this.add.text(20, 20, `Time: ${this.timeSurvived}s`, {
+            fontSize: '32px',
+            fill: '#ffffff',
+            fontFamily: 'Arial',
+            fontWeight: 'bold'
+        });
+
+        // Display high score
+        this.highScoreText = this.add.text(20, 60, `High Score: ${this.highScore}s`, {
+            fontSize: '24px',
+            fill: '#ffffff',
+            fontFamily: 'Arial'
+        });
+
         this.scene.launch('TRAFFIC', {
             player: this.player,
             roadPositions: this.roadPositions,
@@ -87,6 +118,7 @@ class Play extends Phaser.Scene {
             CHASE_VELOCITY: this.CHASE_VELOCITY,
             followerSpeed: this.followerSpeed
         });
+
         // Add a key listener to spawn a cop (for testing)
         this.input.keyboard.on('keydown-SPACE', () => {
             this.scene.get('DA_POLICE').addCop();
@@ -143,9 +175,26 @@ class Play extends Phaser.Scene {
 
         cursors = this.input.keyboard.createCursorKeys();
     }
-
+    gameOver() {
+        if (!this.isGameOver) {
+            this.isGameOver = true;  // Prevent multiple triggers
+    
+            // Store high score if this is the best run
+            if (this.timeSurvived > this.highScore) {
+                this.highScore = this.timeSurvived;
+                localStorage.setItem('highScore', this.highScore);
+            }
+    
+            // Transition to the Game Over screen
+            this.scene.start('gameOver', { 
+                timeSurvived: this.timeSurvived, 
+                highScore: this.highScore 
+            });
+        }
+    }
+    
     update() {
-        // console.log(this.player.x)
+
         if (!this.player.destroyed) {
             if (!this.physics.world.overlap(this.player, this.lanes)) {
                 this.player_isTouching = false;
@@ -200,10 +249,15 @@ class Play extends Phaser.Scene {
 
             playerVector.normalize();
             this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x, this.PLAYER_VELOCITY * playerVector.y);
-        }
+        
         // if (this.physics.world.collider(this.player, this.cops)) {
             // endScene(); // End the scene when player collides with police
         // }
+        if (this.player.y > height + 100) {
+            this.gameOver();
+          }
+    
+        }
 
     }
 }

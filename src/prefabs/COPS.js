@@ -16,6 +16,7 @@ class COPS extends Phaser.Scene {
         this.reposition = false;
         this.PATROL_COOLDOWN = 100;
         this.trailway = 200 
+        
         this.activeCops = []; // Array to store active cops
     }
 
@@ -52,6 +53,7 @@ class COPS extends Phaser.Scene {
     }
 
     addCop() {
+        let playScene = this.scene.get('playScene'); 
         // Randomly spawn the cop in one of the road positions
         const spawnX = Phaser.Math.RND.pick(this.roadPositions); // Random X position
         const spawnY = -50; // Spawn above the screen
@@ -63,9 +65,7 @@ class COPS extends Phaser.Scene {
         // Add collision between cop and player
         this.physics.add.collider(cop, this.player, () => {
             if (this.scene.get('playScene').LANES) {
-                // this.scene.pause('playScene');
-                // this.scene.start('gameOver');
-                console.log('die');
+                playScene.gameOver();
             }
         });
         // Add collision between this cop and other cops
@@ -93,6 +93,7 @@ class COPS extends Phaser.Scene {
         });
         return cop; // Return the cop sprite for further manipulation if needed
     }
+
 
     update() {
 
