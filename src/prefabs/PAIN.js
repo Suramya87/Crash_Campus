@@ -49,16 +49,6 @@ class COPS extends Phaser.Scene {
                 end: 5
             })
         });
-
-        // const delayTime = 3000; // 3 seconds delay for all cops
-        // this.time.delayedCall(delayTime, () => {
-        //     this.activeCops.forEach(cop => {
-        //         cop.setVelocity(0, 100); // Set velocity to (0, 100) for all cops
-        //         console.log('byebye');
-        //     });
-        // });
-        // Override movement for 3 seconds
-
     }
 
     addCop() {
@@ -95,7 +85,8 @@ class COPS extends Phaser.Scene {
             console.log(shiftTime)
             if (cop.active) {
                 cop.overrideMovement = true;
-                cop.setVelocity(0, 200); // Move straight down
+                cop.setVelocity(0, 0)
+                cop.setVelocity(0, 300); // Move straight down
                 cop.play('imma-head-out');
                 console.log('Cop movement overridden: Moving straight down.');
             }

@@ -11,7 +11,7 @@ class Play extends Phaser.Scene {
         this.player_isTouching = false;
         this.player_isTurning = false;
         this.LANES = false;
-        this.roadPositions = [168, 440, 653, 884];
+        this.roadPositions = [169, 410, 650, 895, 1144];
         this.lanePositions = [285, 530, 773, 1014];
         this.laneHeight = 960;
         this.laneWidth = 8;
@@ -134,7 +134,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        // console.log(this.player.y)
+        // console.log(this.player.x)
         if (!this.player.destroyed) {
             if (!this.physics.world.overlap(this.player, this.lanes)) {
                 this.player_isTouching = false;
