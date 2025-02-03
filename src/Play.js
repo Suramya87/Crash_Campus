@@ -4,9 +4,10 @@ class Play extends Phaser.Scene {
     }
 
     init() {
+        this.SPEED_MULTIPLIER = 1;
         this.PLAYER_VELOCITY = 350;
-        this.followerSpeed = 100;
-        this.CHASE_VELOCITY = 500;
+        this.followerSpeed = 100 / this.SPEED_MULTIPLIER;
+        this.CHASE_VELOCITY = 500 / this.SPEED_MULTIPLIER;
         this.player_isTouching = false;
         this.player_isTurning = false;
         this.LANES = false;
@@ -14,8 +15,6 @@ class Play extends Phaser.Scene {
         this.lanePositions = [285, 530, 773, 1014];
         this.laneHeight = 960;
         this.laneWidth = 8;
-        this.TARGET_X = 0;
-        this.TARGET_Y = 0;
     }
 
     preload() {
@@ -23,7 +22,7 @@ class Play extends Phaser.Scene {
         this.load.image('Strips', './assets/rumbleStrips.png');
         this.load.image('Black', './assets/blacktopBG.png');
         this.load.audio('death', './assets/STAY_IN_THE_LANE.mp3');
-        this.load.spritesheet('COPS', './assets/POLICE.png', {
+        this.load.spritesheet('COPS', './assets/POLICE2.png', {
             frameWidth: 100
         });
         this.load.spritesheet('character', './assets/testcar2.png', {
@@ -77,6 +76,19 @@ class Play extends Phaser.Scene {
             CHASE_VELOCITY: this.CHASE_VELOCITY,
             followerSpeed: this.followerSpeed
         });
+        // Add a key listener to spawn a cop (for testing)
+        this.input.keyboard.on('keydown-SPACE', () => {
+            this.scene.get('DA_POLICE').addCop();
+        });
+        
+        // Spawn cops at random intervals
+        this.time.addEvent({
+            delay: Phaser.Math.Between(20000, 50000), // Random delay between 2 and 5 seconds
+            callback: () => {
+                this.scene.get('DA_POLICE').addCop();
+                },
+            loop: true
+        });
 
         this.anims.create({
             key: 'normal',
@@ -122,13 +134,14 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        // console.log(this.player.y)
         if (!this.player.destroyed) {
             if (!this.physics.world.overlap(this.player, this.lanes)) {
                 this.player_isTouching = false;
             }
 
-            this.strips.tilePositionY -= 2;
-            this.lines.tilePositionY -= 2;
+            this.strips.tilePositionY -= 2 * this.SPEED_MULTIPLIER;
+            this.lines.tilePositionY -= 2 * this.SPEED_MULTIPLIER;
             let playerVector = new Phaser.Math.Vector2(0, 0);
             playerVector.y = 0.1;
 
@@ -137,13 +150,15 @@ class Play extends Phaser.Scene {
             }
 
             if (cursors.up.isDown) {
-                this.strips.tilePositionY -= 4;
-                this.lines.tilePositionY -= 4;
+                this.SPEED_MULTIPLIER = 2
+                // this.strips.tilePositionY -= 4;
+                // this.lines.tilePositionY -= 4;
                 playerVector.y = -1;
                 this.player.play('speed');
             } else if (cursors.down.isDown) {
-                this.strips.tilePositionY += 1;
-                this.lines.tilePositionY += 1;
+                this.SPEED_MULTIPLIER = 0.5
+                // this.strips.tilePositionY += 1;
+                // this.lines.tilePositionY += 1;
                 playerVector.y = 1;
                 this.player.play('speed');
             }
@@ -160,9 +175,11 @@ class Play extends Phaser.Scene {
 
             if (!cursors.right.isDown && !cursors.left.isDown) {
                 this.player_isTurning = false;
+                
             }
 
             if (!cursors.up.isDown && !cursors.down.isDown && !cursors.right.isDown && !cursors.left.isDown) {
+                this.SPEED_MULTIPLIER = 1
                 this.player.play('normal');
             }
 
